@@ -11,7 +11,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- example for dark theme styling when using tailwind cdn -->
     <style>
-      /*examples for dark/light themes*/
       .dark .dark\:text-white {
         color: #fff;
       }
@@ -22,117 +21,267 @@
         color: #000;
       }
 
-      /*add your custom css rules here*/
-    </style>
-    <style>
-      body {
-        font-family: "Courier New", Courier, monospace;
-        background-color: rgb(245, 246, 232);
+      .calculator-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.5rem;
+        max-width: 600px;
+        margin: 100px auto 0 auto;
+        border-radius: 1rem;
+        background: rgb(245, 249, 169);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        padding: 2rem;
       }
-
-      .but {
-        vertical-align: middle;
+      .button {
+        background-color: #f4f6f3;
+        border: 2px solid #d1d5db;
+        padding: 1rem;
         text-align: center;
-        float: left;
-        height: 50px;
-        width: 50px;
-        padding: 5px;
-        margin: 5px;
-        background-color: rgb(188, 178, 245);
-        border-radius: 5px;
+        user-select: none;
         cursor: pointer;
-        color: white;
+        transition: background-color 0.2s;
       }
 
-      .but:hover {
-        background-color: rgb(83, 66, 180);
+      .button:hover {
+        background-color: #e5e7eb;
+      }
+      .button:active {
+        background-color: #d1d5db;
+      }
+      .output {
+        grid-column: span 5;
+        background-color: #daeef7;
+        border: 2px solid #d1d5db;
+        padding: 1rem;
+        word-break: break-all;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        min-height: 80px;
       }
 
-      .space {
-        vertical-align: middle;
-        text-align: center;
-        float: left;
-        height: 50px;
-        width: 172px;
-        padding: 5px;
-        margin: 5px;
-        background-color: rgb(188, 178, 245);
-        border-radius: 5px;
-        cursor: pointer;
-        color: white;
-        font-size: 30px;
+      .m {
+        grid-column: span 5;
       }
 
-      .space:hover {
-        background-color: rgb(83, 66, 180);
-      }
-
-      .answer {
-        vertical-align: middle;
-        text-align: center;
-        float: left;
-        height: 30px;
-        width: 172px;
-        padding: 5px;
-        margin: 5px;
-        background-color: rgb(188, 178, 245);
-        border-radius: 5px;
-        cursor: pointer;
-        color: white;
+      .equals-button {
+        background-color: #a8d9f3;
+        margin-right: -235px;
       }
     </style>
   </head>
 
-  <body class="dark:text-white light:text-black">
-    <!-- your app code goes here -->
-    <div
-      style="
-        width: 182px;
-        margin: 20px auto;
-        background-color: rgb(130, 111, 239);
-        margin-top: 150px;
-      "
-    >
-      <input class="answer" type="text" readonly="true" />
-      <div class="but">1</div>
-      <div class="but">2</div>
-      <div class="but">3</div>
-      <div class="but">4</div>
-      <div class="but">5</div>
-      <div class="but">6</div>
-      <div class="but">7</div>
-      <div class="but">8</div>
-      <div class="but">9</div>
-      <div class="but">0</div>
-      <div class="but">+</div>
-      <div class="but">-</div>
-      <div class="space">=</div>
-      <div style="clear: both"></div>
+  <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <div class="calculator-grid">
+      <div class="output dark:bg-gray-800 dark:text-white" id="output">0</div>
+      <button class="button" onclick="memoryStore()">MS</button>
+      <button class="button" onclick="memoryAdd()">M+</button>
+      <button class="button" onclick="memorySubtract()">M-</button>
+
+      <button class="button" onclick="insertConstant('pi')">π</button>
+      <button class="button" onclick="insertConstant('e')">e</button>
+      <button class="button" onclick="performOperation('clear')">C</button>
+      <button class="button" onclick="toggleSecondFunction()">
+        2<sup>nd</sup>
+      </button>
+      <button class="button" onclick="calculateFactorial()">n!</button>
+      <button class="button" onclick="performOperation('square')">x²</button>
+      <button class="button" onclick="performOperation('inverse')">1/x</button>
+      <button class="button" onclick="performOperation('abs')">|x|</button>
+      <button class="button" onclick="performOperation('exp')">exp</button>
+      <button class="button" onclick="deleteLast()">⌫</button>
+      <button class="button" onclick="performOperation('sqrt')">√x</button>
+      <button class="button" onclick="performOperation('open-paren')">(</button>
+      <button class="button" onclick="performOperation('close-paren')">
+        )
+      </button>
+      <button class="button" onclick="performOperation('divide')">÷</button>
+      <button class="button" onclick="performOperation('power')">x^y</button>
+      <button class="button" onclick="addNumber(7)">7</button>
+      <button class="button" onclick="addNumber(8)">8</button>
+      <button class="button" onclick="addNumber(9)">9</button>
+      <button class="button" onclick="performOperation('multiply')">×</button>
+      <button class="button" onclick="performOperation('tenPower')">
+        10^x
+      </button>
+      <button class="button" onclick="addNumber(4)">4</button>
+      <button class="button" onclick="addNumber(5)">5</button>
+      <button class="button" onclick="addNumber(6)">6</button>
+      <button class="button" onclick="performOperation('subtract')">−</button>
+      <button class="button" onclick="performOperation('log')">log</button>
+      <button class="button" onclick="addNumber(1)">1</button>
+      <button class="button" onclick="addNumber(2)">2</button>
+      <button class="button" onclick="addNumber(3)">3</button>
+      <button class="button" onclick="performOperation('add')">+</button>
+      <button class="button" onclick="performOperation('ln')">ln</button>
+      <button class="button" onclick="performOperation('negate')">±</button>
+      <button class="button" onclick="addNumber(0)">0</button>
+      <button class="button" onclick="addNumber('.')">.</button>
+      <button class="equals-button" class="button" onclick="calculate()">
+        =
+      </button>
     </div>
-    <!-- special scripts for integration in MTW gallery - must be placed at the bottom of the HTML after your code -->
+
     <script>
-      // custom config for the MTW app
-      const mtwAppConfig = {
-        border: true, // app border in the MTW page
-      };
+      let currentInput = "0";
+      let previousInput = "";
+      let operation = null;
+      let memoryValue = 0; // This will hold the memory value
+      let isSecondFunctionActive = false;
 
-      ///////////////////////////////////////////////////////
-      // implement this functions in order to use private API
-      const sendPrivateApiRequest = async () => {
-        // your code here:
-        // sendRequestToParent({ cat: 'getAssets' })
-      };
+      function deleteLast() {
+        if (currentInput.length <= 1) {
+          currentInput = "0";
+        } else {
+          currentInput = currentInput.slice(0, -1);
+        }
+        updateDisplay();
+      }
 
-      const acceptPrivateApiResponse = async (data) => {
-        // process received data here:
-        // console.log(data)
-      };
+      function toggleSecondFunction() {
+        // Toggle the state of secondary functions
+        isSecondFunctionActive = !isSecondFunctionActive;
+        // You would need to change the behavior of buttons based on this state
+      }
 
-      // use this in order to send on document load
-      document.addEventListener("DOMContentLoaded", () => {
-        // your code here:
-        //sendRequestToParent({ method: 'getAssets' })
-      });
+      function calculateFactorial() {
+        const number = parseInt(currentInput);
+        if (number < 0 || !Number.isInteger(number)) {
+          currentInput = "Error";
+        } else {
+          currentInput = factorial(number).toString();
+        }
+        updateDisplay();
+      }
+
+      function factorial(n) {
+        if (n === 0 || n === 1) {
+          return 1;
+        } else {
+          return n * factorial(n - 1);
+        }
+      }
+
+      function memoryStore() {
+        memoryValue = parseFloat(currentInput);
+      }
+
+      function memoryAdd() {
+        memoryValue += parseFloat(currentInput);
+      }
+
+      function memorySubtract() {
+        memoryValue -= parseFloat(currentInput);
+      }
+
+      function updateDisplay() {
+        document.getElementById("output").textContent = currentInput;
+      }
+
+      function addNumber(num) {
+        if (currentInput === "0") {
+          currentInput = "";
+        }
+        currentInput += num;
+        updateDisplay();
+      }
+
+      function insertConstant(name) {
+        if (currentInput !== "0") {
+          currentInput += "*";
+        }
+        if (name === "pi") {
+          currentInput += Math.PI;
+        } else if (name === "e") {
+          currentInput += Math.E;
+        }
+        updateDisplay();
+      }
+
+      function performOperation(op) {
+        if (currentInput === "Error") {
+          return;
+        }
+        try {
+          switch (op) {
+            case "clear":
+              currentInput = "0";
+              break;
+            case "square":
+              currentInput = Math.pow(parseFloat(currentInput), 2).toString();
+              break;
+            case "inverse":
+              currentInput = (1 / parseFloat(currentInput)).toString();
+              break;
+            case "abs":
+              currentInput = Math.abs(parseFloat(currentInput)).toString();
+              break;
+            case "sqrt":
+              currentInput = Math.sqrt(parseFloat(currentInput)).toString();
+              break;
+            case "negate":
+              currentInput = (-parseFloat(currentInput)).toString();
+              break;
+            case "ln":
+              currentInput = Math.log(parseFloat(currentInput)).toString();
+              break;
+            case "exp":
+              currentInput = Math.exp(parseFloat(currentInput)).toString();
+              break;
+            case "tenPower":
+              currentInput = Math.pow(10, parseFloat(currentInput)).toString();
+              break;
+            case "log":
+              currentInput = Math.log10(parseFloat(currentInput)).toString();
+              break;
+            default:
+              if (previousInput) {
+                calculate();
+              }
+              previousInput = currentInput;
+              currentInput = "";
+              operation = op;
+              break;
+          }
+        } catch (error) {
+          currentInput = "Error";
+        }
+        updateDisplay();
+      }
+
+      function calculate() {
+        let result;
+        const prev = parseFloat(previousInput);
+        const current = parseFloat(currentInput);
+
+        if (isNaN(prev) || isNaN(current)) return;
+
+        switch (operation) {
+          case "add":
+            result = prev + current;
+            break;
+          case "subtract":
+            result = prev - current;
+            break;
+          case "multiply":
+            result = prev * current;
+            break;
+          case "divide":
+            result = prev / current;
+            break;
+          case "power":
+            result = Math.pow(prev, current);
+            break;
+          default:
+            return;
+        }
+        currentInput = result.toString();
+        operation = null;
+        previousInput = "";
+        updateDisplay();
+      }
+
+      updateDisplay();
     </script>
     <script src="https://morethanwallet.com/appstore/index.js"></script>
   </body>
